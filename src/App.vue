@@ -1,23 +1,20 @@
 <template>
   <v-app>
-    <!-- Navigation Bar -->
-    <v-app-bar app color="primary" dark>
-      <v-toolbar-title>Vue Shop</v-toolbar-title>
-      <v-spacer />
-      <v-btn to="/" text>Products</v-btn>
+    <!-- App Bar -->
+    <v-app-bar :color="isDark ? 'grey-darken-4' : 'primary'" dark app>
+      <v-toolbar-title>My Shop</v-toolbar-title>
+      <v-spacer></v-spacer>
+
+      <!-- Navigation Buttons -->
+      <v-btn to="/" text>Home</v-btn>
       <v-btn to="/cart" text>Cart</v-btn>
-      <!-- Optional Theme Toggle -->
-      <v-switch
-        v-model="isDark"
-        inset
-        hide-details
-        :label="`Theme: ${isDark ? 'Dark' : 'Light'}`"
-        @change="toggleTheme"
-        class="ml-4"
-      />
+
+      <!-- Theme Toggle (Icon only) -->
+      <v-btn icon @click="toggleTheme">
+        <v-icon>{{ isDark ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}</v-icon>
+      </v-btn>
     </v-app-bar>
 
-    <!-- Main Content -->
     <v-main>
       <router-view />
     </v-main>
@@ -25,13 +22,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useTheme } from 'vuetify'
 
-const isDark = ref(false)
 const theme = useTheme()
+const isDark = ref(theme.global.name.value === 'dark')
 
-function toggleTheme() {
+const toggleTheme = () => {
+  isDark.value = !isDark.value
   theme.global.name.value = isDark.value ? 'dark' : 'light'
 }
+
+// Sync theme toggle on change
+watch(() => theme.global.name.value, (val) => {
+  isDark.value = val === 'dark'
+})
 </script>
