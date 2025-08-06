@@ -1,26 +1,53 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <v-app :theme="currentTheme">
+    <v-app-bar app>
+      <RouterLink to="/" style="text-decoration: none; color: inherit;">
+        <v-btn icon>
+          <v-icon>mdi-home</v-icon>
+        </v-btn>
+      </RouterLink>
+
+      <v-toolbar-title>My Store</v-toolbar-title>
+      <v-spacer />
+
+      <RouterLink to="/cart">
+        <v-btn icon>
+          <v-icon>mdi-cart</v-icon>
+        </v-btn>
+      </RouterLink>
+
+      <v-btn icon @click="toggleTheme">
+        <v-icon>{{ currentTheme === 'light' ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-main>
+      <router-view />
+    </v-main>
+  </v-app>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script setup>
+import { ref, watch } from 'vue';
+import { RouterLink } from 'vue-router';
+import { useTheme } from 'vuetify';
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+const currentTheme = ref('light');
+const theme = useTheme();
+
+watch(currentTheme, (val) => {
+  theme.global.name.value = val;
+});
+
+theme.global.name.value = currentTheme.value;
+
+function toggleTheme() {
+  currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body {
+  margin: 0;
 }
 </style>
