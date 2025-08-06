@@ -79,7 +79,9 @@ const selectedCategory = ref(null)
 const selectedRating = ref(null)
 const sortOption = ref(null)
 
-const categories = [...new Set(productStore.products.map(p => p.category))]
+const categories = computed(() => {
+  return [...new Set(productStore.products.map(p => p.category))]
+})
 
 const filteredProducts = computed(() => {
   let result = productStore.products
